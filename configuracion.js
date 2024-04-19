@@ -28,28 +28,39 @@
   btnconsulta.addEventListener("click",Consultar);
 
 
-  async function guardar()
-  {
-    let nombre=document.getElementById("nombre").value;
-    let correo=document.getElementById("correo").value;
-    let asunto=document.getElementById("asunto").value;
-    let mensaje=document.getElementById("mensaje").value;
 
-    const docRef=await addDoc(collection(db,"sugerencias"),{
-      nombre:nombre,
-      correo:correo,
-      asunto:asunto,
-      mensaje:mensaje
 
-    });
 
-    alert("Almacenado correctamente");
-    document.getElementById("nombre").value="";
-    document.getElementById("correo").value="";
-    document.getElementById("asunto").value="";
-    document.getElementById("mensaje").value="";
-  }
+  async function guardar() {
+    let nombre = document.getElementById("nombre").value.trim();
+    let correo = document.getElementById("correo").value.trim();
+    let asunto = document.getElementById("asunto").value.trim();
+    let mensaje = document.getElementById("mensaje").value.trim();
 
+    if (nombre === "" || correo === "" || asunto === "" || mensaje === "") {
+        alert("Todos los campos son obligatorios");
+        return;
+    }
+
+    try {
+        const docRef = await addDoc(collection(db, "sugerencias"), {
+            nombre: nombre,
+            correo: correo,
+            asunto: asunto,
+            mensaje: mensaje
+        });
+
+        alert("Tu sugerencia ha sido receptada, gracias por tu mensaje");
+        document.getElementById("nombre").value = "";
+        document.getElementById("correo").value = "";
+        document.getElementById("asunto").value = "";
+        document.getElementById("mensaje").value = "";
+    } catch (e) {
+        console.error("Error adding document: ", e);
+        alert("Error al enviar la sugerencia, por favor inténtalo de nuevo más tarde.");
+    }
+}
+  
   async function Consultar()
   {
     const consulta=query(collection(db,"sugerencias"));
